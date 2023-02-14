@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    container_name: escola
+    restart: always
+    ports:
+      - "5432"
+    environment:
+      - POSTGRES_PASSWORD= docker
+      - POSTGRES_DB= escola
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: escola-pgadmin
+    tty: true
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+
