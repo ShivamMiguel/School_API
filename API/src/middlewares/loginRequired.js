@@ -1,7 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import jwt from 'jsonwebtoken';
+import User from '../models/user';
 
-export default (req, res, next) => {
+export default async (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -15,6 +16,18 @@ export default (req, res, next) => {
   try {
     const dados = jwt.verify(token, process.env.TOKEN_SECRET);
     const { id, email } = dados;
+
+    const user = await User.findOne({
+      id,
+      email,
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        errors: 'Usuario Invalido',
+      });
+    }
+
     req.userId = id;
     req.userEmail = email;
     return next();
